@@ -32,7 +32,7 @@ function stopDragging() {
 }
 
 // 초기 슬라이더 위치를 중앙으로 설정
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
     const rect = container.getBoundingClientRect();
     const initialPosition = rect.width / 2;
     slider.style.left = `${initialPosition}px`;
