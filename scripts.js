@@ -4,31 +4,39 @@ const beforeImage = document.querySelector('.before');
 
 let isDragging = false;
 
-slider.addEventListener('mousedown', function (e) {
+slider.addEventListener('mousedown', startDrag);
+document.addEventListener('mouseup', stopDrag);
+document.addEventListener('mousemove', moveDrag);
+
+slider.addEventListener('touchstart', startDrag);
+document.addEventListener('touchend', stopDrag);
+document.addEventListener('touchmove', moveDrag);
+
+function startDrag(e) {
     e.preventDefault();
     isDragging = true;
-    document.addEventListener('mousemove', moveSlider);
-    document.addEventListener('mouseup', stopDragging);
-});
+}
 
-container.addEventListener('mouseleave', stopDragging);
+function stopDrag() {
+    isDragging = false;
+}
 
-function moveSlider(e) {
+function moveDrag(e) {
     if (!isDragging) return;
 
+    let clientX;
+    if (e.type === 'mousemove') {
+        clientX = e.clientX;
+    } else if (e.type === 'touchmove') {
+        clientX = e.touches[0].clientX;
+    }
+
     let rect = container.getBoundingClientRect();
-    let offsetX = e.clientX - rect.left;
+    let offsetX = clientX - rect.left;
     if (offsetX < 0) offsetX = 0;
     if (offsetX > rect.width) offsetX = rect.width;
     slider.style.left = `${offsetX}px`;
     beforeImage.style.clip = `rect(0, 500px, 300px, ${offsetX}px)`;
-}
-
-function stopDragging() {
-    if (isDragging) {
-        isDragging = false;
-        document.removeEventListener('mousemove', moveSlider);
-    }
 }
 
 // 초기 슬라이더 위치를 중앙으로 설정
